@@ -1,0 +1,1431 @@
+@import url("variables.css");
+
+/* =========================================================
+   2) Containers / Sections
+========================================================= */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section {
+  padding-block: var(--space-12);
+}
+
+/* =========================================================
+   3) Buttons
+========================================================= */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+.button.primary {
+  background: var(--brand-accent);
+  color: #fff;
+}
+.button.ghost {
+  background: transparent;
+  border-color: var(--brand-accent);
+  color: var(--brand-accent);
+}
+
+/* =========================================================
+   4) Header
+========================================================= */
+.site-header {
+  position: fixed;
+  z-index: 100;
+  inset: 0 0 auto 0;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.025), 0 1.5rem 2rem rgba(0, 0, 0, 0.025);
+  background: #fff;
+  transform: translate3d(0, 0, 0);
+}
+.header-inner {
+  padding-top: 8px;
+}
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 10rem;
+}
+.header__logo_link {
+  display: flex;
+  flex-shrink: 0;
+  transition: all 0.3s ease-out;
+}
+.header__logo_link:hover {
+  transform: scale(1.1);
+}
+.container-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  max-width: 170rem;
+  margin: 0 auto;
+  padding: 0 3rem;
+  justify-content: space-between;
+}
+
+/* =========================================================
+   5) Primary Nav (top level)
+========================================================= */
+.header__nav {
+  height: 100%;
+}
+.header__menu {
+  display: flex;
+  height: 100%;
+  gap: 3rem;
+}
+.header__menu_item {
+  position: relative;
+}
+.header__menu_link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font: 500 1.9rem "Montserrat", sans-serif;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.main_menu > ul > li {
+  display: inline-block;
+  position: relative;
+  margin: 0 -2px;
+}
+.main_menu ul li {
+  position: relative;
+}
+.main_menu ul li .active,
+.main_menu ul li:hover > a {
+  color: var(--hover-color);
+}
+
+/* =========================================================
+   6) Standard Dropdown (non-mega)
+========================================================= */
+.main_menu ul li ul {
+  width: 200px;
+  background: #fff;
+  transition: 0.5s;
+  box-shadow: 0 5px 15px 0 rgba(212, 201, 201, 0.75);
+}
+.main_menu ul li ul li a {
+  padding: 10px 25px;
+  font-size: 15px;
+}
+.main_menu ul li ul li a i {
+  float: right;
+}
+.main_menu ul li ul li ul {
+  left: 100%;
+  top: 0;
+}
+
+/* panel positioning/limits (applies to standard + mega) */
+.main_menu ul li ul,
+.main_menu ul li .mega_menu {
+  top: calc(100% + var(--panel-gap));
+  left: 0;
+}
+.main_menu ul li ul,
+.mega_menu {
+  max-height: calc(100dvh - var(--header-h) - var(--panel-gap) - 16px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.main_menu ul li ul {
+  inset-inline: auto 0;
+  max-width: min(92vw, 320px);
+}
+
+/* =========================================================
+   7) Mega Menu – base and visibility
+========================================================= */
+.mega_menu_dropdown {
+  position: static !important;
+}
+.mega_menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fff;
+  transition: 0.5s;
+  box-shadow: 0 5px 15px 0 rgba(212, 201, 201, 0.75);
+  margin-top: 10px;
+  padding: 24px;
+  padding-bottom: 50px;
+  display: grid;
+  gap: 28px;
+  border-radius: 1rem;
+  align-items: start;
+  grid-auto-columns: auto;
+}
+
+/* open states (hover, focus, toggle) */
+.has_dropdown:hover > .mega_menu,
+.has_dropdown:focus-within > .mega_menu {
+  visibility: visible;
+  opacity: 1;
+  margin-top: 0;
+  z-index: 99;
+}
+
+/* caret: only on dropdown items */
+.has_dropdown > .header__menu_link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -3px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--brand-primary-600);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.08));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.has_dropdown:hover > .header__menu_link::after,
+.has_dropdown:has(.mega_menu:hover) > .header__menu_link::after,
+.has_dropdown:has(.toggle:checked) > .header__menu_link::after,
+.has_dropdown:focus-within > .header__menu_link::after {
+  opacity: 1;
+}
+
+/* active tab color while open */
+.main_menu ul li:hover > .header__menu_link,
+.main_menu ul li .mega_menu:hover ~ .header__menu_link {
+  color: var(--brand-accent);
+}
+
+/* =========================================================
+   8) Shared group/row layout (ALL mega panels)
+   → ensures Why, Solutions, Partners are perfectly aligned
+========================================================= */
+.group h3 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--brand-primary-600);
+  display: inline-block;
+  padding-bottom: 4px;
+}
+.group h4 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  padding-bottom: 6px;
+}
+
+.mega_menu .list {
+  display: grid;
+  gap: 0;
+  margin-top: 2.5rem;
+} /* gap=0 for continuous borders */
+.mega_menu .list .row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid var(--brand-primary-600);
+  position: relative;
+}
+/* .mega_menu .list .row:last-child {
+  border-bottom: none;
+} */
+.mega_menu .list .row .icon {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mega_menu .list .row h4 {
+  margin: 0 0 4px;
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+.mega_menu .list .row p.small {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+/* hover affordance */
+.mega_menu .list .row:hover {
+  background: #f7f8fb;
+  box-shadow: inset 0 0 0 1px rgba(15, 72, 138, 0.08);
+  border-radius: 10px;
+}
+
+/* extend hover hitbox to avoid tiny gaps */
+.mega_menu .row::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  height: 12px;
+}
+
+/* subtle bottom fade when scrollable */
+.mega_menu:has(:where(*):last-child:not(:in-view)),
+.main_menu ul li ul:has(:where(*):last-child:not(:in-view)) {
+  mask-image: linear-gradient(#000, #000 85%, transparent);
+}
+
+/* tiny scrollbar polish */
+.mega_menu::-webkit-scrollbar,
+.main_menu ul li ul::-webkit-scrollbar {
+  width: 6px;
+}
+.mega_menu::-webkit-scrollbar-thumb,
+.main_menu ul li ul::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================================
+   9) WHY Panel (grid + promo w/ :has)
+========================================================= */
+.mega--why {
+  grid-template-columns: auto auto minmax(340px, 420px);
+}
+
+/* shared promo block */
+.mega_menu .promo {
+  --promo-img-h: 250px;
+  overflow: hidden;
+  background: #f5f7fa;
+  border-radius: 12px;
+  padding: 0 16px 16px;
+  padding-top: var(--promo-img-h);
+  color: #0f488a;
+  position: sticky;
+  top: 8px;
+  align-self: start;
+}
+.mega_menu .promo::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: var(--promo-img-h);
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.9) saturate(0.95);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.35s ease, filter 0.2s ease;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+.mega_menu .promo:hover::before {
+  transform: scale(1.02);
+}
+.mega_menu .promo .dynamic-text {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  line-height: 1.45;
+}
+.mega_menu .promo .dynamic-text::before {
+  content: "";
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+/* WHY item hover states */
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/performance/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Performance";
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Fast, optimized hosting that keeps your site lightning quick.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/scalability/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Scalability";
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Auto-scales to meet demand without downtime or lag.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/security/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Security";
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Enterprise-grade protection, firewalls, and daily backups.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(4):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/support/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(4):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(4):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Support";
+}
+.mega--why:has(.group:nth-of-type(1) .list .row:nth-child(4):hover)
+  .promo
+  .dynamic-text::after {
+  content: "UK-based expert engineers available 24/7.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/about/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::before {
+  content: "About Us";
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Learn about our story, people, and mission.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/company/1200/600");
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Company Profile";
+}
+.mega--why:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Certified, trusted, multi-cloud capable since 2015.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   10) SOLUTIONS Panel (grid + promo)
+========================================================= */
+.mega--solutions {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  align-items: start;
+}
+.mega--solutions > .group {
+  min-width: 0;
+}
+.mega--solutions > .group:first-of-type {
+  grid-column: span 2;
+}
+.mega--solutions > .group:first-of-type .flex-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
+  row-gap: 0;
+  min-width: 0;
+  margin-top: 2.5rem;
+}
+.mega--solutions > .group:first-of-type .flex-group > .list {
+  display: contents;
+}
+.mega--solutions .flex-group .list {
+  min-width: 0;
+}
+.mega--solutions .row {
+  position: relative;
+  padding: 8px 3px;
+} /* same hover affordance visuals */
+.mega--solutions .row:hover {
+  background: #f7f8fb;
+  box-shadow: inset 0 0 0 1px rgba(15, 72, 138, 0.08);
+  border-radius: 10px;
+}
+
+/* Solutions promo (same visuals as WHY but non-sticky) */
+.mega--solutions .promo {
+  --promo-img-h: 250px;
+  position: relative;
+  overflow: hidden;
+  background: #f5f7fa;
+  border-radius: 12px;
+  padding: 0 16px 16px;
+  padding-top: var(--promo-img-h);
+  color: #0f488a;
+}
+.mega--solutions .promo::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: var(--promo-img-h);
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.9) saturate(0.95);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.35s ease, filter 0.2s ease;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+.mega--solutions .promo:hover::before {
+  transform: scale(1.02);
+}
+.mega--solutions .promo .dynamic-text {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  font-size: 1.6rem;
+  line-height: 1.45;
+}
+.mega--solutions .promo .dynamic-text::before {
+  content: "";
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+/* =========================================================
+   11) PARTNERS Panel (aligns exactly like WHY)
+========================================================= */
+.mega--partners {
+  grid-template-columns: auto minmax(340px, 420px);
+  align-items: start;
+} /* left list, right sticky promo */
+.mega--partners .promo {
+  --promo-img-h: 250px;
+  position: sticky;
+  top: 8px;
+  padding: 0 16px 16px;
+  padding-top: var(--promo-img-h);
+  background: #f5f7fa;
+  border-radius: 12px;
+  color: #0f488a;
+  overflow: hidden;
+}
+.mega--partners .promo::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--promo-img-h);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.35s ease;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+/* partner item hovers – images + heading injection */
+.mega--partners:has(.group .list .row:nth-child(1):hover) .promo::before {
+  background-image: url("https://picsum.photos/seed/partners-agency/1200/600");
+  opacity: 1;
+}
+.mega--partners:has(.group .list .row:nth-child(1):hover)
+  .promo
+  .small::before {
+  content: "Our Agency Partners";
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+.mega--partners:has(.group .list .row:nth-child(2):hover) .promo::before {
+  background-image: url("https://picsum.photos/seed/become-partner/1200/600");
+  opacity: 1;
+}
+.mega--partners:has(.group .list .row:nth-child(2):hover)
+  .promo
+  .small::before {
+  content: "Become an Agency Partner";
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+.mega--partners:has(.group .list .row:nth-child(3):hover) .promo::before {
+  background-image: url("https://picsum.photos/seed/third-party/1200/600");
+  opacity: 1;
+}
+.mega--partners:has(.group .list .row:nth-child(3):hover)
+  .promo
+  .small::before {
+  content: "Third Party Solutions";
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+.mega--partners .list .row {
+  max-width: 60rem;
+}
+
+.mega--resources {
+  grid-template-columns: auto auto minmax(340px, 420px);
+  align-items: start;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/blog/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Blog";
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Latest tips, benchmarks and platform updates.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/case-studies/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Case Studies";
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Real migrations and performance gains, end-to-end.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/testimonials/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Testimonials";
+}
+.mega--resources:has(.group:nth-of-type(1) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Customer stories on speed, stability and support.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+/* Group 2 (Help & Docs) */
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/docs/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::before {
+  content: "Documentation";
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(1):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Guides for staging, caching, monitoring and more.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/api/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::before {
+  content: "API Documentation";
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(2):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Endpoints, auth flows and practical examples.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(3):hover)
+  .promo::before {
+  background-image: url("https://picsum.photos/seed/faqs/1200/600");
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text {
+  opacity: 1;
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::before {
+  content: "FAQs";
+}
+.mega--resources:has(.group:nth-of-type(2) .list .row:nth-child(3):hover)
+  .promo
+  .dynamic-text::after {
+  content: "Quick answers on SLAs, pricing, and support.";
+  display: block;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.header-cta {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+/* Button base: no absolute children here */
+.header-cta .btn {
+  --slide-dur: 0.6s;
+  --slide-ease: cubic-bezier(0.22, 0.8, 0.25, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  min-height: 44px;
+  white-space: nowrap;
+  font: 500 1.9rem "Montserrat", sans-serif;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+}
+
+.header-cta .btn-outline-secondary {
+  color: #f7f7f7;
+  background: var(--brand-accent);
+  border-radius: 5px;
+}
+.header-cta .btn-outline-secondary:hover {
+  transform: scale(1.1);
+}
+
+.header-cta .btn-primary:hover {
+  color: var(--brand-accent);
+}
+
+/* =========================================================
+   12) Responsive
+========================================================= */
+@media (max-width: 960px) {
+  .header__menu_link::after {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .container {
+    width: 960px;
+  }
+  .mega_menu_demo_2 .mega_menu {
+    width: 940px;
+  }
+  .main_menu ul li ul {
+    width: 150px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .container {
+    width: 720px;
+  }
+  .mega_menu_demo_2 .mega_menu {
+    width: 700px;
+  }
+  .main_menu ul li ul {
+    width: 150px;
+  }
+}
+
+@media (min-width: 768px) {
+  .main_menu ul li ul,
+  .main_menu ul li .mega_menu {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    margin-top: 50px;
+  }
+  .main_menu ul li:hover > ul,
+  .main_menu ul li:hover > .mega_menu {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0;
+    z-index: 99;
+  }
+}
+
+@media (max-width: 1100px) {
+  .mega--solutions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .mega--solutions > .group:first-of-type {
+    grid-column: span 2;
+  }
+  .mega--solutions > .group:first-of-type .flex-group {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mega_menu_demo_2 .mega_menu,
+  .container {
+    width: 100%;
+  }
+  nav {
+    padding: 15px;
+  }
+  .mobile_btn {
+    cursor: pointer;
+    display: block;
+  }
+  .main_menu {
+    display: none;
+    width: 100%;
+  }
+  .main_menu ul li {
+    display: block;
+  }
+  .main_menu ul li a i {
+    float: right;
+  }
+  .main_menu ul li ul {
+    width: 100%;
+  }
+  .main_menu ul li ul li ul {
+    left: 0;
+    top: auto;
+  }
+  .mega_menu .mega_menu_item {
+    width: 50%;
+  }
+  .main_menu ul li ul,
+  .main_menu ul li .mega_menu {
+    display: none;
+    transition: none;
+  }
+
+  /* solutions stack */
+  .mega--solutions {
+    grid-template-columns: 1fr !important;
+  }
+  .mega--solutions .flex-group {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+  .mega--solutions > .group:first-of-type {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .mega_menu .mega_menu_item {
+    width: 100%;
+  }
+}
+/* === OFF-CANVAS SIDEBAR: mobile + mid screens (<=1200px) === */
+@media (max-width: 1023px) {
+  /* Lock page scroll when menu is open */
+  body:has(#nav-t:checked) {
+    overflow: hidden;
+  }
+
+  /* Layering: sidebar above header, overlay between */
+  .site-header {
+    z-index: 1100;
+  }
+  .nav-overlay {
+    z-index: 1150;
+  }
+  nav.main_menu {
+    z-index: 1200;
+  }
+
+  /* Full-height, off-canvas right panel */
+  nav.main_menu {
+    position: fixed;
+    top: 0; /* cover from very top (over the header) */
+    right: 0;
+    bottom: 0;
+    width: min(92vw, 420px);
+    background: #fff;
+    box-shadow: -8px 0 24px rgba(15, 72, 138, 0.12);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    display: block; /* always block; we animate transform only */
+    overflow: auto;
+    padding: 16px 18px 28px;
+  }
+  #nav-t:checked ~ nav.main_menu {
+    transform: translateX(0);
+  }
+
+  /* Overlay covers the whole viewport */
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  #nav-t:checked ~ .nav-overlay {
+    display: block;
+  }
+
+  /* Vertical top level */
+  .header__menu {
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+  }
+  .header__menu_link {
+    height: auto;
+    padding: 12px 4px;
+    font-size: 1.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Kill desktop hover behaviour and absolute positioning on small/mid */
+  .main_menu ul li ul,
+  .main_menu ul li .mega_menu {
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transition: none !important;
+  }
+
+  /* Collapse mega panels by default; open via the checkbox toggle */
+  .mega_menu {
+    display: none;
+    padding: 8px 0 0;
+  }
+  .has_dropdown:has(.toggle:checked) > .mega_menu {
+    display: block;
+  }
+
+  /* Chevron carets on mobile/mid */
+  .has_dropdown > .header__menu_link {
+    position: relative;
+    padding-right: 2rem;
+  }
+  .has_dropdown > .toggle + .header__menu_link::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transition: transform 0.2s ease;
+  }
+  .has_dropdown:has(.toggle:checked) > .toggle + .header__menu_link::after {
+    transform: translateY(-50%) rotate(225deg);
+  }
+
+  /* Stack mega rows nicely; hide promos on small panels */
+  .mega_menu {
+    display: block;
+    gap: 0;
+    padding: 8px 0 0;
+  }
+  .mega_menu .group {
+    padding: 10px 0;
+    border-top: 1px solid #eaeff6;
+  }
+  .mega_menu .group:first-child {
+    border-top: 0;
+  }
+  .mega_menu .list {
+    display: block;
+    margin-top: 4px;
+  }
+  .mega_menu .list .row {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeff6;
+  }
+  .mega_menu .promo {
+    display: none !important;
+  }
+}
+
+/* === DESKTOP (>=1201px): keep hover dropdowns/mega === */
+@media (min-width: 1024px) {
+  .main_menu ul li ul,
+  .main_menu ul li .mega_menu {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    margin-top: 50px;
+    transition: opacity 0.25s ease, margin-top 0.25s ease;
+  }
+  /* .main_menu ul li:hover > ul,
+  .main_menu ul li:hover > .mega_menu {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0;
+    z-index: 99;
+  } */
+  /* Hide mobile chevrons on desktop */
+  .has_dropdown > .toggle + .header__menu_link::after {
+    display: none;
+  }
+}
+.header__logo_image {
+  width: 20px;
+  height: 20px;
+}
+body:has(#nav-toggle:checked) {
+  overflow: hidden;
+}
+
+body:has(#nav-toggle:checked)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 49;
+}
+@media (max-width: 960px) {
+  .menu {
+    position: fixed;
+    inset: 0; /* cover the entire viewport */
+    padding: calc(var(--mob-header-h) + env(safe-area-inset-top, 0px)) 16px 20px;
+    background: #fff;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100vh; /* ensure full height */
+    max-height: none; /* remove previous cap */
+    overflow: auto;
+    z-index: 50; /* above backdrop, below header */
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity var(--speed), transform var(--speed),
+      visibility var(--speed);
+  }
+  /* Show when toggled */
+  /* #nav-toggle:checked ~ .nav .menu {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    visibility: visible;
+  } */
+
+  /* Keep header above the sheet */
+  .header {
+    z-index: 60;
+    height: var(--mob-header-h);
+  }
+
+  /* Each mega panel stacks and can scroll inside the sheet */
+  .mega {
+    position: static;
+    translate: 0;
+    width: 100%;
+    margin: 10px 0 6px;
+    grid-template-columns: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    max-height: none;
+  }
+
+  /* If you want the opened mega to have its own internal scroll area: */
+  .mega .list {
+    max-height: calc(100vh - var(--mob-header-h) - 120px);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide caret under tabs on mobile */
+  .menu > li > a::after,
+  .menu > li > label::after {
+    display: none;
+  }
+
+  .end-actions {
+    display: none;
+  }
+}
+
+.header__logo_link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header__logo_image {
+  height: clamp(28px, 6vw, 48px); /* small phones → desktops */
+  width: auto;
+}
+
+/* If you’re using the .brand__mark circle in the demo header */
+.brand__mark {
+  width: clamp(28px, 6vw, 42px);
+  height: clamp(28px, 6vw, 42px);
+}
+
+/* Keep header height consistent with the token */
+.header__container {
+  height: var(--header-h);
+}
+
+/* Slightly reduce logo on ultra-small screens */
+@media (max-width: 360px) {
+  .header__logo_image {
+    height: 26px;
+  }
+}
+@media (max-width: 1023px) {
+  .site-header {
+    transform: none; /* or remove the line entirely */
+  }
+}
+/* --- NEW/UPDATED: Visibility for hamburger & header CTAs --- */
+.mobile-toggle {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .mobile-toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .header-cta {
+    display: none;
+  } /* hide header buttons on mobile; we render inside sidebar */
+}
+/* --- NEW: Mobile sidebar header (close button + spacing) --- */
+@media (max-width: 1023px) {
+  nav.main_menu {
+    padding: 12px 18px 28px;
+  }
+  .nav-sheet-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0 12px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    border-bottom: 1px solid #eaeff6;
+    margin-bottom: 8px;
+  }
+  .nav-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #eaeff6;
+  }
+}
+/* --- FIX: bottom border per top-level menu on mobile --- */
+@media (max-width: 1023px) {
+  .header__menu > li {
+    border-bottom: 1px solid #a6abb1;
+    padding: 5px 0px;
+  }
+}
+/* --- IMPORTANT: Scope “checkbox opens mega” to mobile ONLY --- */
+/* remove/override any global `.has_dropdown:has(.toggle:checked) > .mega_menu { ... }` */
+@media (max-width: 1023px) {
+  .has_dropdown:has(.toggle:checked) > .mega_menu {
+    display: block;
+  }
+}
+/* On desktop, toggles never control visibility */
+@media (min-width: 1024px) {
+  .has_dropdown .toggle {
+    display: none !important;
+  }
+}
+/* --- Desktop: keep hover open, add safe hover bridge to prevent flicker --- */
+@media (min-width: 1024px) {
+  .has_dropdown {
+    position: relative;
+  }
+  /* invisible “bridge” between tab and mega panel so small gaps don’t close it */
+  .has_dropdown::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    right: -10px;
+    top: 100%;
+    height: 14px; /* tiny buffer below the tab */
+  }
+  /* when li has .open (set by JS on hover-intent), keep panel visible */
+  .has_dropdown.open > .mega_menu {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0;
+    z-index: 99;
+  } /* No carets/chevrons on desktop tabs */
+  .has_dropdown > .header__menu_link .chev {
+    display: none !important;
+  }
+  .header__menu_link::after {
+    display: block !important;
+  }
+}
+
+/* --- Mobile: show caret (already there), ensure no desktop caret leaks --- */
+@media (max-width: 1023px) {
+  .has_dropdown > .toggle + .header__menu_link::after {
+    /* keep the little caret arrow on mobile only */
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transition: transform 0.2s ease;
+  }
+  .has_dropdown:has(.toggle:checked) > .toggle + .header__menu_link::after {
+    transform: translateY(-50%) rotate(225deg);
+  }
+}
+/* --- Minor: widen mega scroll catch fade, keep existing styles --- */
+.mega_menu:has(:where(*):last-child:not(:in-view)),
+.main_menu ul li ul:has(:where(*):last-child:not(:in-view)) {
+  mask-image: linear-gradient(#000, #000 90%, transparent);
+}
+
+@media (max-width: 1023px) {
+  /* Make sure header CTAs remain hidden on mobile (already present) */
+  .header-cta {
+    display: none;
+  }
+}
+/* Hide the mini header + close button by default (desktop) */
+.nav-sheet-header,
+.nav-close {
+  display: none;
+}
+/* MOBILE & MID (<=1200px) */
+@media (max-width: 1023px) {
+  /* Let the UL size to its content so CTAs sit right under it */
+  .header__menu {
+    height: auto; /* was 100% */
+    flex: 0 0 auto; /* don't grow */
+    margin-bottom: 8px; /* small breathing room above CTAs */
+  }
+
+  /* Show the mini header + close button only on mobile sidebar */
+  .nav-sheet-header {
+    display: flex; /* your existing styling continues to apply */
+  }
+  .nav-close {
+    display: inline-flex;
+  }
+
+  /* Keep the CTA bar tight under the menu */
+  .mobile-cta-bar {
+    margin-top: 6rem;
+    display: flex;
+    gap: 3rem;
+    flex-direction: column;
+  }
+}
+/* --- DESKTOP: open ONLY when hovering the tab itself (or the panel) --- */
+@media (min-width: 1024px) {
+  /* Neutralize the broad opener */
+  .main_menu ul li:hover > ul,
+  .main_menu ul li:hover > .mega_menu {
+    visibility: hidden;
+    opacity: 0;
+    margin-top: 50px;
+    z-index: auto;
+  }
+
+  /* Precise open states */
+  .has_dropdown > .header__menu_link:hover + .mega_menu,
+  .has_dropdown:has(.mega_menu:hover) > .mega_menu,
+  .has_dropdown.open > .mega_menu {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0;
+    z-index: 99;
+  }
+
+  /* Caret + active color only when the TAB is hovered (or panel hovered) */
+  .has_dropdown > .header__menu_link:hover,
+  .has_dropdown:has(.mega_menu:hover) > .header__menu_link {
+    color: var(--brand-accent);
+  }
+  .has_dropdown > .header__menu_link::after {
+    opacity: 0;
+  }
+  .has_dropdown > .header__menu_link:hover::after,
+  .has_dropdown:has(.mega_menu:hover) > .header__menu_link::after {
+    opacity: 1;
+  }
+
+  /* Remove the invisible hover bridge which causes near-hover opens */
+  .has_dropdown::after {
+    display: none !important;
+  }
+
+  /* Keep the hover target tight to the label */
+  .header__menu_item {
+    padding-inline: 0;
+  }
+  .header__menu_link {
+    padding-inline: 0.75rem;
+  } /* adjust to taste */
+}

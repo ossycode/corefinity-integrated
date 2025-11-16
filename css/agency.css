@@ -1,0 +1,236 @@
+.aside__links {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  width: 100%;
+  margin: 2.5rem 0 1.5rem;
+}
+
+.aside__links_item {
+  position: relative;
+  margin-top: 3rem;
+  padding-left: 2.25rem;
+}
+
+.aside__links_item::before {
+  content: "";
+  position: absolute;
+  top: 1.4rem;
+  left: 0;
+  height: 0.7rem;
+  width: 0.7rem;
+  border-radius: 50%;
+  background: #ff7101;
+}
+
+.aside__links_link {
+  font: 500 2.5rem / 1.5 "Montserrat", sans-serif;
+  transition: all 0.3s ease-out;
+}
+
+.demo-layout {
+  display: flex;
+  align-items: start;
+  justify-content: space-around;
+  /* gap: 4rem; */
+}
+
+/* left column: bullets */
+.demo-list {
+  flex: 0 0 32%;
+  font-size: 2rem;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 2.2rem; /* nice bullet indent */
+}
+
+.demo-list li + li {
+  margin-top: 2rem;
+}
+
+/* right column: video card with custom border */
+.demo-video {
+  flex-shrink: 0;
+  width: 55%;
+  margin-top: 0; /* override default .item margin if needed */
+}
+
+/* inner padding so video doesn't sit directly on the border */
+.demo-video-inner {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+}
+
+.demo-video-el {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* border-radius: 1.2rem; */
+  background: #f5f5f5; /* fallback if no poster */
+}
+
+.demo-border .item-border-top-right .item-border__part02 {
+  border-top: 2rem solid rgba(0, 155, 222, 0.1);
+}
+
+.demo-border .item-border::after {
+  content: none;
+  position: absolute;
+  height: 0rem;
+  width: 0rem;
+  margin: auto;
+  border-radius: 0rem;
+  background: transparent;
+}
+
+.check__list_pic {
+  display: flex !important;
+  flex-shrink: 0;
+  height: 2rem;
+  width: 2rem;
+  margin: 0 1.25rem;
+}
+
+.check__list_item {
+  color: #32be7d;
+  fill: #32be7d;
+}
+.check__list_item {
+  display: flex;
+  align-items: center;
+}
+/* responsive: stack on small screens */
+@media (max-width: 768px) {
+  .demo-layout {
+    flex-direction: column;
+  }
+
+  .demo-list {
+    flex-basis: auto;
+  }
+
+  .demo-video-inner {
+    padding: 2rem;
+  }
+}
+
+.margin-up-xl {
+  margin-top: 14rem;
+}
+
+/* flow row */
+.partner-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: nowrap;
+}
+
+.onboard-step-card p {
+  width: 100% !important;
+  align-items: center;
+}
+
+/* base box style (unchanged) */
+.partner-step {
+  text-align: center;
+  min-height: 30rem !important;
+}
+
+.mid-size {
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+.partner-snapshot {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.partner-snapshot li svg {
+  width: 4rem;
+  height: 4rem;
+}
+.partner-snapshot li {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.accreditations__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* individual badge */
+.accreditations__badge {
+  flex: 1 1 calc(33.333% - 2rem);
+  max-width: 260px;
+  min-width: 190px;
+
+  background: #0f488a; /* change to your brand colour */
+  color: #ffffff;
+  border-radius: 999px; /* pill shape */
+  padding: 1.4rem 2rem;
+  font-size: 1.7rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.accreditations__badge:hover {
+  background-color: #ff7101;
+}
+
+/* tablet: max 2 per row */
+@media (max-width: 800px) {
+  .accreditations__badge {
+    flex: 1 1 calc(50% - 2rem);
+  }
+}
+
+/* mobile: 1 per row */
+@media (max-width: 480px) {
+  .accreditations__badge {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
+/* responsive stacking */
+@media (max-width: 900px) {
+  .partner-flow {
+    flex-direction: column;
+    gap: 1.8rem;
+  }
+
+  .partner-arrow {
+    transform: rotate(90deg);
+  }
+  .partner-arrow svg {
+    width: 8rem;
+    height: 8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .demo-video {
+    width: 100%;
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mid-size {
+    max-width: 100%;
+  }
+}

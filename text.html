@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Corefinity – Mega Menu (HTML/CSS only)</title>
+    <style>
+      /* ========== Design Tokens ========== */
+      :root {
+        --brand: #ff8557; /* orange tab */
+        --ink: #121417;
+        --ink-2: #3b3f45;
+        --line: #e6e7ea;
+        --bg: #ffffff;
+        --panel: #f2f3f5; /* light grey right panel */
+        --radius: 14px;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --max: 1200px; /* max width of mega panel */
+        --speed: 0.28s; /* transition speed */
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      /* Reset-ish */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font: 16px/1.5 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        color: var(--ink);
+        background: #eef2f6;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        margin: 0.25rem 0 0.25rem;
+      }
+
+      /* ========== Top Navigation Bar ========== */
+      .header {
+        background: #fff;
+        border: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .header__inner {
+        max-width: var(--max);
+        margin: auto;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 10px 20px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+      .brand__mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #d7ecff;
+      }
+
+      /* Mobile menu toggle */
+      #nav-toggle {
+        display: none;
+      }
+      .nav {
+        flex: 1;
+      }
+      .nav__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .menu {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Top-level items */
+      .menu > li {
+        position: relative;
+      }
+      .menu > li > label,
+      .menu > li > a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-radius: 999px;
+        line-height: 1;
+        font-weight: 600;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+      }
+      .menu > li > a:focus-visible,
+      .menu > li > label:focus-visible {
+        box-shadow: 0 0 0 3px rgba(255, 133, 87, 0.35);
+      }
+
+      /* Free Demo pill */
+      .cta {
+        background: var(--brand);
+        color: #fff;
+        border: 1px solid transparent;
+      }
+      .cta:hover {
+        filter: brightness(0.96);
+      }
+      .menu > li > a:not(.cta) {
+        border: 1px solid transparent;
+      }
+
+      /* Caret ^ under active tab */
+      .menu > li.open > a::after,
+      .menu > li.open > label::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        translate: -50% 0;
+        bottom: -11px;
+        border: 7px solid transparent;
+        border-bottom-color: #fff; /* caret body */
+        filter: drop-shadow(0 -2px 0 var(--line));
+      }
+
+      /* Active (open) tab gets orange bg */
+      .menu > li.open > a:not(.cta),
+      .menu > li.open > label {
+        background: var(--brand);
+        color: #fff;
+      }
+
+      /* ========== Mega Panel (shared) ========== */
+      .mega {
+        position: absolute;
+        left: 50%;
+        translate: -50% 0;
+        width: min(100vw - 24px, var(--max));
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        margin-top: 14px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 28px;
+        grid-template-columns: 1fr 1fr 1fr;
+        opacity: 0;
+        transform: translate(-50%, 10px);
+        pointer-events: none;
+        visibility: hidden;
+        transition: opacity var(--speed), transform var(--speed),
+          visibility var(--speed);
+        will-change: transform, opacity;
+      }
+
+      /* Right promo/image column used in several menus */
+      .mega .promo {
+        grid-column: 3 / 4;
+        background: var(--panel);
+        border-radius: 12px;
+        min-height: 260px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 24px;
+        border: 1px dashed #d7d9de;
+      }
+
+      /* Simple rows list style */
+      .list {
+        display: grid;
+        gap: 18px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 52px 1fr;
+        align-items: center;
+        column-gap: 16px;
+        row-gap: 6px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .row .ico {
+        width: 48px;
+        height: 48px;
+        border: 2px solid #000;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        font-size: 13px;
+      }
+
+      /* Section titles */
+      .group h3 {
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        border-bottom: 3px solid #000;
+        display: inline-block;
+        padding-bottom: 6px;
+      }
+
+      /* Open states (hover, focus-within, or mobile checkbox checked) */
+      .menu > li:has(.mega):hover,
+      .menu > li:has(.mega):focus-within,
+      .menu > li:has(.toggle:checked) {
+        z-index: 60;
+      }
+      .menu > li:has(.mega):hover > .mega,
+      .menu > li:has(.mega):focus-within > .mega,
+      .menu > li:has(.toggle:checked) > .mega {
+        opacity: 1;
+        transform: translate(-50%, 0);
+        pointer-events: auto;
+        visibility: visible;
+      }
+      .menu > li:has(.mega):hover,
+      .menu > li:has(.mega):focus-within,
+      .menu > li:has(.toggle:checked) {
+        /* add .open styling hook */
+      }
+      .menu > li:has(.mega):hover,
+      .menu > li:has(.mega):focus-within,
+      .menu > li:has(.toggle:checked) {
+      }
+      .menu > li:has(.mega):hover {
+      }
+      .menu > li:has(.mega):hover > a,
+      .menu > li:has(.mega):focus-within > a,
+      .menu > li:has(.toggle:checked) > a,
+      .menu > li:has(.mega):hover > label,
+      .menu > li:has(.mega):focus-within > label,
+      .menu > li:has(.toggle:checked) > label {
+        background: var(--brand);
+        color: #fff;
+      }
+      .menu > li:has(.mega):hover > a::after,
+      .menu > li:has(.mega):focus-within > a::after,
+      .menu > li:has(.toggle:checked) > a::after,
+      .menu > li:has(.mega):hover > label::after,
+      .menu > li:has(.mega):focus-within > label::after,
+      .menu > li:has(.toggle:checked) > label::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        translate: -50% 0;
+        bottom: -11px;
+        border: 7px solid transparent;
+        border-bottom-color: #fff;
+        filter: drop-shadow(0 -2px 0 var(--line));
+      }
+
+      /* ========== Specific Layout Tweaks per Menu ========== */
+      .mega--why {
+        grid-template-columns: 1fr 1fr 1fr; /* features / company / promo */
+      }
+      .mega--solutions {
+        grid-template-columns: 1fr 1fr 1fr; /* platforms / enterprise / cloud */
+      }
+      .mega--partners {
+        grid-template-columns: 1fr 2fr; /* list / promo */
+      }
+      .mega--resources {
+        grid-template-columns: 1fr 1fr 1fr; /* content / technical / promo */
+      }
+
+      /* ========== Right-side buttons (Free Demo / Contact) ========== */
+      .end-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn {
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-weight: 600;
+      }
+      .btn:hover {
+        background: #fafafa;
+      }
+
+      /* ========== Mobile ========== */
+      .hamburger {
+        display: none;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-weight: 700;
+        background: #fff;
+      }
+      @media (max-width: 960px) {
+        .nav__bar {
+          justify-content: space-between;
+        }
+        .hamburger {
+          display: inline-flex;
+        }
+        .menu {
+          position: fixed;
+          inset: 64px 12px auto 12px;
+          flex-direction: column;
+          gap: 6px;
+          background: #fff;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          padding: 12px;
+          box-shadow: var(--shadow);
+          max-height: calc(100vh - 90px);
+          overflow: auto;
+          opacity: 0;
+          transform: translateY(-6px);
+          pointer-events: none;
+          visibility: hidden;
+          transition: opacity var(--speed), transform var(--speed),
+            visibility var(--speed);
+        }
+        #nav-toggle:checked ~ .nav .menu {
+          opacity: 1;
+          transform: none;
+          pointer-events: auto;
+          visibility: visible;
+        }
+        .mega {
+          position: static;
+          translate: 0;
+          width: 100%;
+          margin: 10px 0 6px;
+          grid-template-columns: 1fr; /* stack */
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          pointer-events: auto;
+        }
+        .menu > li > a:not(.cta),
+        .menu > li > label {
+          width: 100%;
+          justify-content: space-between;
+          border: 1px solid var(--line);
+        }
+        .menu > li > a::after,
+        .menu > li > label::after {
+          display: none;
+        } /* caret hidden on mobile */
+        .end-actions {
+          display: none;
+        }
+      }
+
+      /* Utility */
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .small {
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header" role="banner">
+      <div class="header__inner">
+        <a class="brand" href="/" aria-label="Corefinity Home">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span>core<span style="color: #1ca0ff">finity</span></span>
+        </a>
+
+        <!-- Mobile menu button -->
+        <input id="nav-toggle" type="checkbox" hidden />
+        <label
+          for="nav-toggle"
+          class="hamburger"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          >Menu</label
+        >
+
+        <nav class="nav" aria-label="Primary">
+          <ul id="primary-nav" class="menu" role="menubar">
+            <!-- Why Corefinity? -->
+            <li role="none">
+              <input class="toggle" id="why-t" type="checkbox" hidden />
+              <label
+                for="why-t"
+                class="trigger"
+                role="menuitem"
+                aria-haspopup="true"
+                >Why Corefinity?</label
+              >
+
+              <div
+                class="mega mega--why"
+                role="group"
+                aria-label="Why Corefinity panel"
+              >
+                <section class="group">
+                  <h3>Features</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">↗︎</div>
+                      <div>
+                        <h4>Performance</h4>
+                        <p class="small">
+                          High-performance hosting engineered to handle spikes
+                          and keep sites running smoothly.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">DB</div>
+                      <div>
+                        <h4>Scalability</h4>
+                        <p class="small">
+                          Seamlessly scale with auto-scaling that adapts to
+                          surges without downtime.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">🔒</div>
+                      <div>
+                        <h4>Security</h4>
+                        <p class="small">
+                          Proactive monitoring, firewalls, daily backups –
+                          enterprise-grade security.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">24/7</div>
+                      <div>
+                        <h4>Support</h4>
+                        <p class="small">
+                          UK-based experts via Slack, phone and ticketing – real
+                          engineers.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="group">
+                  <h3>Company</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">👤</div>
+                      <div>
+                        <h4>About Us</h4>
+                        <p class="small">
+                          Our values, people and how a UK team became a trusted
+                          eCommerce hosting partner.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico" aria-hidden="true">📖</div>
+                      <div>
+                        <h4>Company Profile</h4>
+                        <p class="small">
+                          Corefinity at a glance – founded 2015, certified,
+                          multi-cloud capable, key facts.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <aside class="promo" aria-hidden="true">
+                  <div>
+                    <h3>Dynamic image / content</h3>
+                    <p class="small">Changes based on hovered section.</p>
+                  </div>
+                </aside>
+              </div>
+            </li>
+
+            <!-- Solutions -->
+            <li role="none">
+              <input class="toggle" id="sol-t" type="checkbox" hidden />
+              <label
+                for="sol-t"
+                class="trigger"
+                role="menuitem"
+                aria-haspopup="true"
+                >Solutions</label
+              >
+
+              <div
+                class="mega mega--solutions"
+                role="group"
+                aria-label="Solutions panel"
+              >
+                <!-- Platforms & Applications -->
+                <section class="group">
+                  <h3>Platforms &amp; Applications</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">M</div>
+                      <div>
+                        <h4>Magento</h4>
+                        <p class="small">
+                          Fully managed Magento hosting - fast, secure and ready
+                          to scale with zero‑downtime deploys
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">WOO</div>
+                      <div>
+                        <h4>WooCommerce</h4>
+                        <p class="small">
+                          Managed WooCommerce hosting - fast checkouts,
+                          autoscaling and no-downtime updates
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">WP</div>
+                      <div>
+                        <h4>WordPress</h4>
+                        <p class="small">
+                          Keep WordPress sites fast and stable - staging,
+                          caching and proactive monitoring included
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">🔥</div>
+                      <div>
+                        <h4>Drupal</h4>
+                        <p class="small">
+                          Secure, scalable and tuned for complex content
+                          workflows.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">VS</div>
+                      <div>
+                        <h4>Vue Storefront</h4>
+                        <p class="small">
+                          Managed VSF hosting – secure and tuned for complex
+                          workflows.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">CS</div>
+                      <div>
+                        <h4>CS Cart</h4>
+                        <p class="small">
+                          Secure, auto-scaling multi-vendor marketplaces.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <!-- Enterprise -->
+                <section class="group">
+                  <h3>Enterprise</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">M↟</div>
+                      <div>
+                        <h4>Magento Enterprise</h4>
+                        <p class="small">
+                          Fully managed, secure, ready to scale with
+                          zero-downtime deploys.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">WOO↟</div>
+                      <div>
+                        <h4>WooCommerce Enterprise</h4>
+                        <p class="small">
+                          Fast checkouts, autoscaling and no-downtime updates.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">🔥↟</div>
+                      <div>
+                        <h4>Drupal Enterprise</h4>
+                        <p class="small">
+                          Secure, scalable and tuned for complex content
+                          workflows.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                  <div class="list" style="margin-top: 14px">
+                    <article class="row">
+                      <div class="ico">PHP</div>
+                      <div>
+                        <h4>PHP</h4>
+                        <p class="small">
+                          Managed PHP hosting – secure, auto-scaling,
+                          zero-downtime deploys.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">L</div>
+                      <div>
+                        <h4>Laravel</h4>
+                        <p class="small">
+                          Managed Laravel hosting – secure, auto-scaling,
+                          zero-downtime.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">JS</div>
+                      <div>
+                        <h4>Node.js</h4>
+                        <p class="small">
+                          Managed Node.js hosting – secure, auto-scaling,
+                          zero-downtime.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <!-- Cloud Services -->
+                <section class="group">
+                  <h3>Cloud Services</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">☁︎G</div>
+                      <div>
+                        <h4>GCP Management</h4>
+                        <p class="small">
+                          Architect, monitor and optimise Google Cloud for
+                          performance and cost.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">AWS</div>
+                      <div>
+                        <h4>AWS Management</h4>
+                        <p class="small">
+                          Managed Magento hosting on AWS – fast, secure,
+                          zero-downtime.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">☁︎</div>
+                      <div>
+                        <h4>Cloud Consultancy</h4>
+                        <p class="small">
+                          Independent advice to assess, architect and optimise
+                          your cloud.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+              </div>
+            </li>
+
+            <!-- Get a quote (simple link – no mega) -->
+            <li role="none"><a role="menuitem" href="#">Get a quote</a></li>
+
+            <!-- Partners -->
+            <li role="none">
+              <input class="toggle" id="part-t" type="checkbox" hidden />
+              <label
+                for="part-t"
+                class="trigger"
+                role="menuitem"
+                aria-haspopup="true"
+                >Partners</label
+              >
+
+              <div
+                class="mega mega--partners"
+                role="group"
+                aria-label="Partners panel"
+              >
+                <section class="group">
+                  <h3>Partners</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">🤝</div>
+                      <div>
+                        <h4>Our Agency Partners</h4>
+                        <p class="small">
+                          The agencies that trust Corefinity to host and scale
+                          their clients’ sites.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">⬆︎</div>
+                      <div>
+                        <h4>Become an Agency Partner</h4>
+                        <p class="small">
+                          Migrate clients fast, earn as you grow (Partner
+                          Programme within this page).
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">🔌</div>
+                      <div>
+                        <h4>Third Party Solutions</h4>
+                        <p class="small">
+                          Trusted add-ons and integrations we deploy alongside
+                          your stack.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+                <aside class="promo" aria-hidden="true">
+                  <div>
+                    <h3>Dynamic image / content</h3>
+                    <p class="small">Updates as you explore partner options.</p>
+                  </div>
+                </aside>
+              </div>
+            </li>
+
+            <!-- Resources -->
+            <li role="none">
+              <input class="toggle" id="res-t" type="checkbox" hidden />
+              <label
+                for="res-t"
+                class="trigger"
+                role="menuitem"
+                aria-haspopup="true"
+                >Resources</label
+              >
+
+              <div
+                class="mega mega--resources"
+                role="group"
+                aria-label="Resources panel"
+              >
+                <section class="group">
+                  <h3>Content Resources</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">📰</div>
+                      <div>
+                        <h4>Blog</h4>
+                        <p class="small">
+                          News, tutorials and best practices for Magento &amp;
+                          WooCommerce.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">📊</div>
+                      <div>
+                        <h4>Case Studies</h4>
+                        <p class="small">
+                          Before/after performance wins, migrations and growth
+                          stories.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">⭐</div>
+                      <div>
+                        <h4>Testimonials</h4>
+                        <p class="small">
+                          Real words from real customers — speed, stability,
+                          support.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <section class="group">
+                  <h3>Technical Resources</h3>
+                  <div class="list">
+                    <article class="row">
+                      <div class="ico">📄</div>
+                      <div>
+                        <h4>Documentation</h4>
+                        <p class="small">
+                          Everything you need to run, monitor and optimise your
+                          stack.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">{}</div>
+                      <div>
+                        <h4>API Documentation</h4>
+                        <p class="small">
+                          Using the Corefinity dashboard — team roles to
+                          zero-downtime deploys.
+                        </p>
+                      </div>
+                    </article>
+                    <article class="row">
+                      <div class="ico">?</div>
+                      <div>
+                        <h4>FAQs</h4>
+                        <p class="small">
+                          Short, straight answers on performance, pricing,
+                          support and SLAs.
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                </section>
+
+                <aside class="promo" aria-hidden="true">
+                  <div>
+                    <h3>Dynamic image / content</h3>
+                    <p class="small">
+                      Updates as you hover different resource groups.
+                    </p>
+                  </div>
+                </aside>
+              </div>
+            </li>
+
+            <!-- Right end actions -->
+            <li role="none">
+              <a class="cta" role="menuitem" href="#">Free Demo</a>
+            </li>
+            <li role="none"><a role="menuitem" href="#">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="end-actions" aria-hidden="true">
+          <a class="btn" href="#">Contact</a>
+        </div>
+      </div>
+    </header>
+
+    <main aria-label="Main content">
+      <div style="max-width: var(--max); margin: 40px auto; padding: 0 20px">
+        <h1>Page content</h1>
+        <p class="mono">
+          Hover / focus top items to see each mega panel. On mobile, tap a tab
+          to expand; tap “Menu” to open/close the menu.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
