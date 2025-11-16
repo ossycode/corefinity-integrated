@@ -1381,6 +1381,12 @@ body:has(#nav-toggle:checked)::before {
     gap: 3rem;
     flex-direction: column;
   }
+  .mobile-cta-bar .btn-contact {
+    width: 100%;
+  }
+  .mobile-cta-bar .btn {
+    font-size: 2.5rem;
+  }
 }
 /* --- DESKTOP: open ONLY when hovering the tab itself (or the panel) --- */
 @media (min-width: 1024px) {
